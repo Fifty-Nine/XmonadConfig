@@ -5,3 +5,7 @@ cabal-dev
 *.chi
 *.chs.h
 .virthualenv
+xmonad-i386-linux
+xmonad-x86_64-linux
+history
+old_configs
