@@ -17,6 +17,7 @@ import XMonad.Layout.MagicFocus
 import XMonad.Layout.Master
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Reflect
 import XMonad.Layout.Spiral
 import XMonad.Layout.Tabbed
 import qualified XMonad.StackSet as W
@@ -160,10 +161,12 @@ myTheme = theme smallClean
 
 -- A layout for IM windows
 imLayout = avoidStruts
-           $ smartBorders
-           $ withIM (1%7) (Or (And (ClassName "Pidgin") (Role "buddy_list")) (And (ClassName "Empathy") (Role "contact_list")))
-             (tallDwmStyle shrinkText myTheme)
-             --(dwmStyle shrinkText myTheme (Tall 0))
+         $ smartBorders
+         $ reflectHoriz
+         $ withIM (1%7) (Or (And (ClassName "Pidgin") (Role "buddy_list")) (And (ClassName "Empathy") (Role "contact_list")))
+           (dwmStyle shrinkText myTheme Grid)
+         --  $ reflectHoriz
+--           $ mastered (1/100) (1/2) $ simpleTabbed)
 
 -- A layout for console windows
 consoleLayout = avoidStruts
