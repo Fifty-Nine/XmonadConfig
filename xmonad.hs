@@ -165,8 +165,6 @@ imLayout = avoidStruts
          $ reflectHoriz
          $ withIM (1%7) (Or (And (ClassName "Pidgin") (Role "buddy_list")) (And (ClassName "Empathy") (Role "contact_list")))
            (dwmStyle shrinkText myTheme Grid)
-         --  $ reflectHoriz
---           $ mastered (1/100) (1/2) $ simpleTabbed)
 
 -- A layout for console windows
 consoleLayout = avoidStruts
