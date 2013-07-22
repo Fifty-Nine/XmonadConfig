@@ -50,11 +50,10 @@ canSimCommand     = (desktopAppsFolder
 iprCommand        = "/usr/bin/totem http://128.255.60.59:8000/listen.pls"
 sshCommand        = "ssh -N -D8080 princet-nas"
 objViewerCommand  = "cd /home/tprince/dev/Venom/ObjectViewer && ./ObjectViewer"
-totemCommand = "/usr/bin/totem"
 totemPlayPauseCommand = "/usr/bin/totem --play-pause"
-vmCommand = "/usr/bin/VBoxManage startvm 'Ubuntu x86' --type headless"
 relayCommand = "/home/tprince/dev/Desktop/CanRelay/CanRelay 2>&1 > /home/tprince/.relay_log"
 synergysCommand = "/usr/bin/synergys"
+mountTankCommand = "sshfs princet-nas:/tank/data ~/tank/data"
 
 framebufferCommand width height depth = "qvfb -width "  ++ (show width) 
                                          ++ " -height " ++ (show height)
@@ -80,7 +79,6 @@ myKeysP =
     , ("M-s",         swapNextScreen)
     , ("M1-S-<Tab>",  shiftNextScreen)
     , ("M-r",         shellPrompt defaultXPConfig { promptKeymap = M.fromList [((controlMask,xK_c), quit)] `M.union` promptKeymap defaultXPConfig } )
-    , ("M-m",         spawn totemCommand)
     , ("M-<Space>",   spawn totemPlayPauseCommand)
     ]
 
@@ -238,28 +236,25 @@ setBgImages left right = spawn ( "xloadimage -onroot -border black -at 0,0 "
                                ++ right
                                )
 
+spawnActions = [ spawn xrandrCmd
+               , spawn keymapCmd
+               , spawn trayerCmd
+               , setBgImages leftBgImage rightBgImage
+               , spawn synergysCommand
+               , spawn networkManagerCommand
+               , spawn sshCommand
+               , spawn mountTankCommand
+               , spawn browserCommand
+               , spawn vcsCommand
+               , spawn mailCommand
+               , spawn chatCommand
+               , spawn relayCommand
+               ]
 
 main = do
-    spawn xrandrCmd
+    sequence_ spawnActions
     bar1 <-spawnPipe "/usr/bin/dzen2 -xs 1 -w 1920 -h 32 -ta l -fn '-unregistered-latin modern sans-bold-r-expanded-*-17-120-100-100-p-0-iso8859-15'"
     bar2 <-spawnPipe "/usr/bin/dzen2 -xs 2 -w 1920 -h 32 -ta l -fn '-unregistered-latin modern sans-bold-r-expanded-*-17-120-100-100-p-0-iso8859-15'"
-    spawn keymapCmd
-    spawn trayerCmd
-    setBgImages leftBgImage rightBgImage
-    spawn synergysCommand
-    spawn networkManagerCommand
-    spawn sshCommand
-    spawn browserCommand
-    spawn vcsCommand
-    spawn mailCommand
-    spawn chatCommand
-    spawn rdesktopCommand
-    spawn (framebufferCommand 1024 768 16)
-    spawn gpsSimCommand
-    spawn canSimCommand
-    spawn vmCommand
-    spawn relayCommand
-    --spawn iprCommand
     xmonad $ (myConfig bar1 bar2)
 
 myConfig bar1 bar2 = defaultConfig
